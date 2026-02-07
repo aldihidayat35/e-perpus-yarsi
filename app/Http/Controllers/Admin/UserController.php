@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Traits\HandlesFileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,8 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
+    use HandlesFileUpload;
+
     public function index(Request $request)
     {
         $query = User::query();
@@ -54,7 +57,7 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $this->uploadFile($request->file('avatar'), 'avatars', 'public');
         }
 
         $validated['password'] = Hash::make($validated['password']);
@@ -85,7 +88,7 @@ class UserController extends Controller
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $this->uploadFile($request->file('avatar'), 'avatars', 'public');
         }
 
         if (!empty($validated['password'])) {

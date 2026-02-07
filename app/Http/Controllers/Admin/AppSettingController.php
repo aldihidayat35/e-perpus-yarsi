@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AppSetting;
+use App\Traits\HandlesFileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AppSettingController extends Controller
 {
+    use HandlesFileUpload;
+
     public function index()
     {
         $settings = AppSetting::getGrouped();
@@ -33,7 +36,7 @@ class AppSettingController extends Controller
                         Storage::disk('public')->delete($setting->value);
                     }
 
-                    $path = $request->file("settings.{$key}")->store('settings', 'public');
+                    $path = $this->uploadFile($request->file("settings.{$key}"), 'settings', 'public');
                     $setting->update(['value' => $path]);
                 }
             } elseif ($setting->type === 'boolean') {

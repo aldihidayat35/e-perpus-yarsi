@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Ebook;
+use App\Traits\HandlesFileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EbookController extends Controller
 {
+    use HandlesFileUpload;
+
     public function index(Request $request)
     {
         $books = Book::with(['category', 'ebook'])
@@ -47,11 +50,11 @@ class EbookController extends Controller
         // Handle cover upload
         $coverPath = null;
         if ($request->hasFile('cover_image')) {
-            $coverPath = $request->file('cover_image')->store('covers', 'public');
+            $coverPath = $this->uploadFile($request->file('cover_image'), 'covers', 'public');
         }
 
         // Handle PDF upload (private storage)
-        $pdfPath = $request->file('pdf_file')->store('ebooks', 'local');
+        $pdfPath = $this->uploadFile($request->file('pdf_file'), 'ebooks', 'local');
 
         // Count PDF pages
         $totalPages = $this->countPdfPages($request->file('pdf_file'));
@@ -111,8 +114,7 @@ class EbookController extends Controller
             if ($book->cover_image) {
                 Storage::disk('public')->delete($book->cover_image);
             }
-            $validated['cover_image'] = $request->file('cover_image')
-                ->store('covers', 'public');
+            $validated['cover_image'] = $this->uploadFile($request->file('cover_image'), 'covers', 'public');
         }
 
         $book->update([
@@ -132,7 +134,7 @@ class EbookController extends Controller
                 Storage::disk('local')->delete($ebook->file_path);
             }
 
-            $pdfPath = $request->file('pdf_file')->store('ebooks', 'local');
+            $pdfPath = $this->uploadFile($request->file('pdf_file'), 'ebooks', 'local');
             $totalPages = $this->countPdfPages($request->file('pdf_file'));
 
             if ($ebook) {
@@ -177,7 +179,7 @@ class EbookController extends Controller
     private function countPdfPages($file): ?int
     {
         try {
-            $content = file_get_contents($file->getRealPath());
+            $content = file_get_contents($file->getPathname());
             // Simple regex to count pages in PDF
             preg_match_all('/\/Type\s*\/Page[^s]/i', $content, $matches);
             $count = count($matches[0]);
