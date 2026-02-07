@@ -170,7 +170,7 @@ class ImportExportController extends Controller
             'file' => 'required|file|mimes:csv,txt|max:5120',
         ]);
 
-        $path = $request->file('file')->getRealPath();
+        $path = $request->file('file')->getPathname();
         $rows = $this->parseCsv($path);
 
         if (count($rows) === 0) {
@@ -216,7 +216,7 @@ class ImportExportController extends Controller
             'file' => 'required|file|mimes:csv,txt|max:10240',
         ]);
 
-        $path = $request->file('file')->getRealPath();
+        $path = $request->file('file')->getPathname();
         $rows = $this->parseCsv($path);
 
         if (count($rows) === 0) {
@@ -278,7 +278,7 @@ class ImportExportController extends Controller
             'file' => 'required|file|mimes:csv,txt|max:10240',
         ]);
 
-        $path = $request->file('file')->getRealPath();
+        $path = $request->file('file')->getPathname();
         $rows = $this->parseCsv($path);
 
         if (count($rows) === 0) {
@@ -347,7 +347,7 @@ class ImportExportController extends Controller
             'file' => 'required|file|mimes:csv,txt|max:10240',
         ]);
 
-        $path = $request->file('file')->getRealPath();
+        $path = $request->file('file')->getPathname();
         $rows = $this->parseCsv($path);
 
         if (count($rows) === 0) {

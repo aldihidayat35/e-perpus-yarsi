@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Category;
+use App\Traits\HandlesFileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
+    use HandlesFileUpload;
+
     public function index(Request $request)
     {
         $books = Book::with('category')
@@ -46,8 +49,7 @@ class BookController extends Controller
         $validated['category_id'] = $category->id;
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')
-                ->store('covers', 'public');
+            $validated['cover_image'] = $this->uploadFile($request->file('cover_image'), 'covers', 'public');
         }
 
         Book::create($validated);
@@ -86,8 +88,7 @@ class BookController extends Controller
             if ($book->cover_image) {
                 Storage::disk('public')->delete($book->cover_image);
             }
-            $validated['cover_image'] = $request->file('cover_image')
-                ->store('covers', 'public');
+            $validated['cover_image'] = $this->uploadFile($request->file('cover_image'), 'covers', 'public');
         }
 
         $book->update($validated);
