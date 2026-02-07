@@ -4,10 +4,9 @@
     <div class="header-brand">
         <a href="{{ route('admin.dashboard') }}">
             @if(app_setting('app_logo'))
-                <img alt="Logo" src="{{ asset('storage/' . app_setting('app_logo')) }}" class="h-25px h-lg-25px"/>
-            @else
-                <span class="text-white fw-bold fs-4">{{ app_setting('app_name', config('app.name')) }}</span>
+            <img alt="Logo" src="{{ asset('storage/' . app_setting('app_logo')) }}" class="h-25px h-lg-25px"/>
             @endif
+            <span class="text-white fw-bold fs-4 ms-2">{{ app_setting('app_name', config('app.name')) }}</span>
         </a>
 
         <div id="kt_aside_toggle"
