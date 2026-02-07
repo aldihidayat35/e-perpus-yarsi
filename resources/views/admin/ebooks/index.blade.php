@@ -27,7 +27,13 @@
                 </form>
             </div>
         </div>
-        <div class="card-toolbar">
+        <div class="card-toolbar d-flex gap-2">
+            <a href="{{ route('admin.io.export.ebooks') }}" class="btn btn-light-success">
+                <i class="ki-duotone ki-file-down fs-4 me-1"><span class="path1"></span><span class="path2"></span></i> Export
+            </a>
+            <button type="button" class="btn btn-light-info" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="ki-duotone ki-file-up fs-4 me-1"><span class="path1"></span><span class="path2"></span></i> Import
+            </button>
             <a href="{{ route('admin.ebooks.create') }}" class="btn btn-primary">
                 <i class="ki-duotone ki-plus fs-2"></i> Tambah E-Book
             </a>
@@ -108,4 +114,10 @@
         </div>
     </div>
 </div>
+
+@include('partials._import-modal', [
+    'title' => 'Import E-Book (Metadata)',
+    'importRoute' => route('admin.io.import.ebooks'),
+    'templateRoute' => route('admin.io.template', 'ebooks'),
+])
 @endsection
