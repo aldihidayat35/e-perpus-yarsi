@@ -23,7 +23,7 @@ trait HandlesFileUpload
         if ($disk === 'public') {
             $destinationPath = storage_path('app/public/' . $folder);
         } else {
-            $destinationPath = storage_path('app/' . $folder);
+            $destinationPath = storage_path('app/private/' . $folder);
         }
 
         if (!is_dir($destinationPath)) {
