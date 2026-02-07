@@ -116,9 +116,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-end mt-4">
-            {{ $books->withQueryString()->links() }}
-        </div>
+        {{ $books->withQueryString()->links() }}
     </div>
 </div>
 
